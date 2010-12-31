@@ -4,7 +4,7 @@
     b. OR - have the template tag include groups by name and have
             a mash.py or something to contain the actual files to be mashed...
 
-2. utility to take list of forms and/or formsets and mash media from all
+2. utility to take list of forms and/or formsets (and/or widgets?) and mash media from all
     a. should allow multiple lists to be passed so multiple different files can
         be generated
 
