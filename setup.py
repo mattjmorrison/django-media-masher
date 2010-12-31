@@ -1,14 +1,16 @@
 from setuptools import setup
 
 setup(
-    name="django-static",
+    name="django-media-masher",
     version="dev",
-    description="Template application for Django and Buildout",
-    author="Matthew J. MOrrison",
+    description="Compile JavaScript and CSS into single minified files",
+    author="Matthew J. Morrison",
     author_email="mattj.morrison@gmail.com",
-    package_dir={'':'example_project'},
+    package_dir={'':'src'},
+    packages=('masher',),
     install_requires = (
         'south',
         'django-debug-toolbar',
+        'mock',
     ),
 )
