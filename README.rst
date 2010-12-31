@@ -76,7 +76,8 @@ same optimized file.
 How to use it...
 ===================
 
-Forms:
+Forms
+::
     from masher import site
 
     class MyForm(forms.Form):
