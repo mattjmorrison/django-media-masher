@@ -77,25 +77,25 @@ How to use it...
 ===================
 
 Forms::
-    from masher import site
+        from masher import site
 
-    class MyForm(forms.Form):
-        # ... fields ...
-        class Media:
-            js = (site.mash(['path/to/media/file.js'],)
-            css = {
-                'all': (site.mash(['path/to/media/file.css'],)
-            }
+        class MyForm(forms.Form):
+            # ... fields ...
+            class Media:
+                js = (site.mash(['path/to/media/file.js'],)
+                css = {
+                    'all': (site.mash(['path/to/media/file.css'],)
+                }
 
 Widgets::
-    from masher import site
-    class CalendarWidget(forms.TextInput):
-        class Media:
-            js = (site.mash(['path/to/media/file.js'],)
-            css = {
-                'all': (site.mash(['path/to/media/file.css'],)
-            }
+        from masher import site
+        class CalendarWidget(forms.TextInput):
+            class Media:
+                js = (site.mash(['path/to/media/file.js'],)
+                css = {
+                    'all': (site.mash(['path/to/media/file.css'],)
+                }
 
 Templates::
-    {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
-    {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
+        {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
+        {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
