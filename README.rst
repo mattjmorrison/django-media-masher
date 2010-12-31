@@ -14,12 +14,17 @@ You don't want to obfuscate your source code by optimizing it.
 You don't want to worry about changing all of the URLS to your static media
 between development and production.
 
+You don't want to have to configure anything for your before/after optimized
+files.
+
 The Solution - Django Media Masher
 ===================
 
 Django Media Masher uses Closure Compiler (http://code.google.com/closure/compiler/)
 and YUI Compressor (http://developer.yahoo.com/yui/compressor/) to
 optimize JavaScript and CSS media for Django applications.
+
+Other Solutions: http://code.google.com/p/django-compress/
 
 What happens...
 ===================
@@ -39,6 +44,8 @@ more than once.
 
 Why Does it suck?
 ===================
+
+Django Media Masher doesn't suck (it's awesome, I wrote it), but the problem is solves does!
 
 All JavaScript and CSS should be optimized so it downloads quickly, however nobody
 wants to write optimized JavaScript or CSS because it is horribly unreadable and
