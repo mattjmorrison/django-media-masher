@@ -1,13 +1,12 @@
-
 from setuptools import setup
 
 setup(
-    name="django-buildout",
+    name="django-static",
     version="dev",
     description="Template application for Django and Buildout",
     author="Matthew J. MOrrison",
-
-    package_dir={'': 'src'},
+    author_email="mattj.morrison@gmail.com",
+    package_dir={'':'example_project'},
     install_requires = (
         'south',
         'django-debug-toolbar',
