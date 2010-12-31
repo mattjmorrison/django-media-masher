@@ -4,9 +4,7 @@
     b. OR - have the template tag include groups by name and have
             a mash.py or something to contain the actual files to be mashed...
 2. utility to take list of forms and/or formsets and mash media from all
-3. 1 & 2 - in production - will generate and return just the file name only
-4. 1 & 2 - in development - will generate and return the file name, but also create the file
-5. support for css
-6. don't let css and js be mixed
+3. support for css
+4. don't let css and js be mixed
 
 
