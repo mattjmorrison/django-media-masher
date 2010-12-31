@@ -88,7 +88,8 @@ Forms
                 'all': (site.mash(['path/to/media/file.css'],)
             }
 
-Widgets:
+Widgets
+::
     from masher import site
     class CalendarWidget(forms.TextInput):
         class Media:
@@ -97,6 +98,7 @@ Widgets:
                 'all': (site.mash(['path/to/media/file.css'],)
             }
 
-Templates:
+Templates
+::
     {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
     {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
