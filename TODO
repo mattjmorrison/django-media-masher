@@ -1,6 +1,7 @@
 
 1. Template tag that accepts list of files and returns the hashed name
     a. Template tag must create file if it doesn't exist, or always when development
+    b. should depend on Django 1.3's static media finders
 
 2. utility to take list of forms and/or formsets (and/or widgets?) and mash media from all
     a. should allow multiple lists to be passed so multiple different files can
