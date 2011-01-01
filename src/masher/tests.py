@@ -1,9 +1,23 @@
-from django import test
 from hashlib import sha1
 from mock import patch, Mock
+
+from django import test
 from django.conf import settings
+from django.template import Template, Context
+
 import masher
 import os
+
+class MashTemplateTagTests(test.TestCase):
+
+    @patch('masher.MashMedia.mash')
+    def test_returns_hashed_filename(self, mash):
+        template = Template("""
+        src="{% mash 'one.js' "two.js" three.js %}"
+        """)
+        result = template.render(Context())
+        self.assertEqual(((['one.js', 'two.js', 'three.js'],), {}), mash.call_args)
+        self.assertEqual('src="%s"' % mash.return_value, result.strip())
 
 class MashMediaTests(test.TestCase):
 

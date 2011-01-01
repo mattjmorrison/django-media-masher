@@ -14,5 +14,15 @@
 
 6. add support for Closure Compiler options
 
+7. get current process id and add to hashed name so threads don't step on eachother
 
+8. add pre-generate option for template tags (which won't happen until page load time)
+
+9. benchmark 7 & 8 to see which one is better
+
+10. benchmark startup times for large javascript files with Closure and YUI
+
+11. benchmark startup times with large files and lots of wsgi processes
+
+12. support for gzip
 

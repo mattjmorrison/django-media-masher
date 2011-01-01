@@ -3,6 +3,9 @@ import logging
 from hashlib import sha1
 from subprocess import call
 from django.conf import settings
+from django.template.loader import add_to_builtins
+
+add_to_builtins('masher.templatetags.masher_tags')
 
 APP_PATH = os.path.abspath(os.path.dirname(__file__))
 CLOSURE_JAR_PATH = os.path.join(APP_PATH, 'compressors', 'compiler.jar')
