@@ -26,6 +26,3 @@
 11. benchmark startup times with large files and lots of wsgi processes
 
 12. support for gzip
-
-13. support debug option to not minify, but still combine media
-

@@ -38,7 +38,7 @@ What Media Masher does is it allows you to keep your JavaScript and CSS source
 code logically separated into different directories, files, and written in a
 readable manner.  At server startup time, all related files
 (see What are Related Files?) are optimized into a single file and put in your
-MASHER_OUTPUT_DIR. Media Masher also generates a unique name for each unique
+STATIC_ROOT. Media Masher also generates a unique name for each unique
 combination of files and keeps track so it doesn't regenerate the same thing
 more than once.
 
@@ -102,3 +102,13 @@ Templates
 ::
     {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
     {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
+
+Settings...
+===================
+
+STATIC_ROOT = "path/to/generated/media"
+
+MASHER_COMPRESS = False #default is True
+
+when MASHER_COMPRESS is false the media files will be combined, but
+not compressed.  

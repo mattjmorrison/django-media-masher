@@ -88,16 +88,16 @@ class MashMediaTests(test.TestCase):
 
     def test_output_dir_can_be_customized(self):
         original_setting = None
-        if hasattr(settings, 'MASHER_OUTPUT_DIR'):
-            original_setting = getattr(settings, 'MASHER_OUTPUT_DIR')
+        if hasattr(settings, 'STATIC_ROOT'):
+            original_setting = getattr(settings, 'STATIC_ROOT')
 
-        settings.MASHER_OUTPUT_DIR = "/output/"
+        settings.STATIC_ROOT = "/output/"
         filename = self.mash.create_full_output_path("file_name")
 
         self.assertEqual('/output/file_name', filename)
 
         if original_setting:
-            settings.MASHER_OUTPUT_DIR = original_setting
+            settings.STATIC_ROOT = original_setting
 
     @patch('masher.MashMedia.closure_compile')
     @patch('masher.MashMedia.combine_uncompressed')

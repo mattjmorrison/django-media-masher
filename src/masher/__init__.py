@@ -8,7 +8,6 @@ add_to_builtins('masher.templatetags.masher_tags')
 
 APP_PATH = os.path.abspath(os.path.dirname(__file__))
 CLOSURE_JAR_PATH = os.path.join(APP_PATH, 'compressors', 'compiler.jar')
-MASHER_OUTPUT_DIR = APP_PATH
 
 CLOSURE_BASE_COMMAND = ["java", "-jar", CLOSURE_JAR_PATH]
 
@@ -69,16 +68,13 @@ class MashMedia(object):
                 combined_file.write(contents)
 
     def create_full_output_path(self, filename):
-        return os.path.join(self.get_output_dir(), filename)
+        return os.path.join(settings.STATIC_ROOT, filename)
 
     def create_output_filename(self, files):
         sorted_file_names = self.sort_names(files)
         file_name_string = self.join_names(sorted_file_names)
         filename_hash = self.hash_names(file_name_string)
         return "%s.min.js" % filename_hash
-
-    def get_output_dir(self):
-        return getattr(settings, 'MASHER_OUTPUT_DIR', MASHER_OUTPUT_DIR)
 
     def sort_names(self, files):
         return sorted(files)
