@@ -34,8 +34,8 @@ Widgets
 
 Templates
 ::
-    {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
-    {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
+    {% mash MEDIA_PATH_VAR 'file1.css' 'file2.css' %}
+    {% mash MEDIA_PATH_VAR 'file1.js' 'file2.js' %}
 
 Settings...
 ===================
