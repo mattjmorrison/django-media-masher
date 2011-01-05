@@ -114,5 +114,5 @@ Optional
 ::
     MASHER_COMPRESS = False #default is True
 
-when MASHER_COMPRESS is false the media files will be combined, but
-not compressed.  
+When MASHER_COMPRESS is false the media files will be combined, but
+not compressed, this can be useful when debugging.
