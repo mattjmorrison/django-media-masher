@@ -106,9 +106,12 @@ Templates
 Settings...
 ===================
 
+Required
 ::
     STATIC_ROOT = "path/to/generated/media"
 
+Optional
+::
     MASHER_COMPRESS = False #default is True
 
 when MASHER_COMPRESS is false the media files will be combined, but
