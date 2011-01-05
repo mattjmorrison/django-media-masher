@@ -13,10 +13,11 @@ class MashTemplateTagTests(test.TestCase):
     @patch('masher.MashMedia.mash')
     def test_returns_hashed_filename(self, mash):
         template = Template("""
-        src="{% mash 'one.js' "two.js" three.js %}"
+        src="{% mash MEDIA_ROOT 'one.js' "two.js" three.js %}"
         """)
-        result = template.render(Context())
-        self.assertEqual(((['one.js', 'two.js', 'three.js'],), {}), mash.call_args)
+        result = template.render(Context({'MEDIA_ROOT':'/asdf'}))
+        self.assertEqual(((['/asdf/one.js', '/asdf/two.js', '/asdf/three.js'],), {}),
+                         mash.call_args)
         self.assertEqual('src="%s"' % mash.return_value, result.strip())
 
 class MashMediaTests(test.TestCase):

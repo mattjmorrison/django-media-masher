@@ -1,3 +1,4 @@
+from os import path
 from django import template
 
 import masher
@@ -6,11 +7,14 @@ register = template.Library()
 
 class MashNode(template.Node):
 
-    def __init__(self, files):
+    def __init__(self, media_root, files):
+        self.media_root = template.Variable(media_root)
         self.files = files
 
     def render(self, context):
-        return masher.MashMedia().mash(self.files)
+        media_root_resolve = self.media_root.resolve(context)
+        qualified_files = [path.join(media_root_resolve, name) for name in self.files]
+        return masher.MashMedia().mash(qualified_files)
 
 @register.tag
 def mash(parser, token):
@@ -18,4 +22,5 @@ def mash(parser, token):
     if len(bits) < 1:
         raise template.TemplateSyntaxError("'mash' tag requires at least one argument")
 
-    return MashNode([bit.strip("'" + '"') for bit in bits])
+    media_root = bits.pop(0).strip("'" + '"')
+    return MashNode(media_root, [bit.strip("'" + '"') for bit in bits])

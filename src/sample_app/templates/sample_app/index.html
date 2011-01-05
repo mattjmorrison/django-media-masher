@@ -8,8 +8,6 @@
     </div>
 
     {{ form.media.js }}
-    {% comment %}
-    <script type="text/javascript" src="{% mash "one.js" "two.js" "three.js" %}"></script>
-    {% endcomment %}
+    <script type="text/javascript" src="{% mash MEDIA_ROOT "one.js" "two.js" "three.js" %}"></script>
 </body>
 </html>
