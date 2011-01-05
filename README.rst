@@ -1,6 +1,56 @@
 !!! This is still under development !!!
 !!! not all of these features have been implemented !!!
 
+Installing:
+===================
+Download the source and run
+::
+    python setup.py install
+
+How to use it...
+===================
+
+Forms
+::
+    from masher import site
+
+    class MyForm(forms.Form):
+        # ... fields ...
+        class Media:
+            js = (site.mash(['path/to/media/file.js'],)
+            css = {
+                'all': (site.mash(['path/to/media/file.css'],)
+            }
+
+Widgets
+::
+    from masher import site
+    class CalendarWidget(forms.TextInput):
+        class Media:
+            js = (site.mash(['path/to/media/file.js'],)
+            css = {
+                'all': (site.mash(['path/to/media/file.css'],)
+            }
+
+Templates
+::
+    {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
+    {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
+
+Settings...
+===================
+
+Required
+::
+    STATIC_ROOT = "path/to/generated/media"
+
+Optional
+::
+    MASHER_COMPRESS = False #default is True
+
+When MASHER_COMPRESS is false the media files will be combined, but
+not compressed, this can be useful when debugging.
+
 The Problem
 ===================
 
@@ -72,47 +122,3 @@ file and cut down on HTTP requests. You can also optionally combine jQuery and j
 into a single file and your code into a separate one. In the latter case, anyplace on your
 entire site that you want to use both jQuery and jQueryUI together they will all use the
 same optimized file.
-
-How to use it...
-===================
-
-Forms
-::
-    from masher import site
-
-    class MyForm(forms.Form):
-        # ... fields ...
-        class Media:
-            js = (site.mash(['path/to/media/file.js'],)
-            css = {
-                'all': (site.mash(['path/to/media/file.css'],)
-            }
-
-Widgets
-::
-    from masher import site
-    class CalendarWidget(forms.TextInput):
-        class Media:
-            js = (site.mash(['path/to/media/file.js'],)
-            css = {
-                'all': (site.mash(['path/to/media/file.css'],)
-            }
-
-Templates
-::
-    {% mash 'path/to/media/file1.css' 'path/to/media/file2.css' %}
-    {% mash 'path/to/media/file1.js' 'path/to/media/file2.js' %}
-
-Settings...
-===================
-
-Required
-::
-    STATIC_ROOT = "path/to/generated/media"
-
-Optional
-::
-    MASHER_COMPRESS = False #default is True
-
-When MASHER_COMPRESS is false the media files will be combined, but
-not compressed, this can be useful when debugging.
