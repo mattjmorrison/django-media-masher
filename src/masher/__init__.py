@@ -1,5 +1,4 @@
 import os
-import logging
 from hashlib import sha1
 from subprocess import call
 from django.conf import settings
@@ -20,7 +19,6 @@ class MashMedia(object):
 
     def mash(self, files):
         new_filename = self.create_output_filename(files)
-        logging.debug(new_filename)
 
         if new_filename in self._mashed_files:
             self.check_for_invalid_remash(files, self._mashed_files[new_filename])
@@ -29,9 +27,8 @@ class MashMedia(object):
 
         file_url = "%s%s" % (settings.MEDIA_URL, new_filename)
 
-        logging.debug(file_url)
-
         return file_url
+
 
     def check_for_invalid_remash(self, new_files, existing_files):
         """
@@ -49,7 +46,10 @@ class MashMedia(object):
 
     def cache_and_compile(self, files, new_filename):
         self._mashed_files[new_filename] = files
-        self.closure_compile(files, new_filename)
+        if getattr(settings, 'MASHER_COMPRESS', True):
+            self.closure_compile(files, new_filename)
+        else:
+            self.combine_uncompressed(files, new_filename)
 
     def closure_compile(self, files, new_filename):
         args = ['--js_output_file', self.create_full_output_path(new_filename)]
@@ -57,9 +57,16 @@ class MashMedia(object):
         for js_file in files:
             args += ["--js", js_file]
 
-        logging.debug(str(args))
-
         call(CLOSURE_BASE_COMMAND + args)
+
+    def get_file_contents(self, file):
+        return open(file, 'r').read()
+
+    def combine_uncompressed(self, files, filename):
+        with open(self.create_full_output_path(filename), 'w') as combined_file:
+            for file in files:
+                contents = self.get_file_contents(file)
+                combined_file.write(contents)
 
     def create_full_output_path(self, filename):
         return os.path.join(self.get_output_dir(), filename)

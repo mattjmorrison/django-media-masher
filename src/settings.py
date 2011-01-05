@@ -19,7 +19,6 @@ DATABASES = {
 USE_I18N = False
 USE_L10N = True
 MEDIA_ROOT = path.join(PROJECT_DIR, 'media')
-MASHER_OUTPUT_DIR = MEDIA_ROOT
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin-media/'
 SECRET_KEY = '-2cmgs7l$5grqwd!x&6241^ah&xx34ki48fwn#ef5s_lm(1@0a4w&v'
@@ -61,3 +60,6 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,
     'INTERCEPT_REDIRECTS': False,
 }
+
+MASHER_OUTPUT_DIR = MEDIA_ROOT
+MASHER_COMPRESS = False

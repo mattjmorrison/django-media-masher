@@ -1,5 +1,5 @@
 from hashlib import sha1
-from mock import patch, Mock
+from mock import patch, Mock, MagicMock
 
 from django import test
 from django.conf import settings
@@ -99,32 +99,61 @@ class MashMediaTests(test.TestCase):
         if original_setting:
             settings.MASHER_OUTPUT_DIR = original_setting
 
-#TODO - use yuicompressor for css
-#    @patch('masher.MashMedia.create_output_filename')
-#    @patch('masher.MashMedia.closure_compile')
-#    @patch('masher.MashMedia.yui_compile')
-#    def test_use_yuicompressor_when_configured(self, yui_compile, closure_compile, filename):
-#        original_setting = None
-#        if hasattr(settings, 'MASH_WITH_YUI'):
-#            original_setting = getattr(settings, 'MASH_WITH_YUI')
-#
-#        settings.MASH_WITH_YUI = True
-#        self.mash.mash(self.files)
-#        self.assertFalse(closure_compile.called)
-#        self.assertEqual(((self.files, filename.return_value), {}), yui_compile.call_args)
-#
-#        if original_setting:
-#            settings.MASH_WITH_YUI = original_setting
+    @patch('masher.MashMedia.closure_compile')
+    @patch('masher.MashMedia.combine_uncompressed')
+    def test_combines_but_does_not_compress_when_option_is_off(self, combine_uncompressed, closure_compile):
+        original_setting = None
+        if hasattr(settings, 'MASHER_COMPRESS'):
+            original_setting = getattr(settings, 'MASHER_COMPRESS')
 
-#    @patch('masher.call')
-#    def test_passes_each_file_to_yui_compressor_when_css_files(self, call_mock):
-#        output_filename = 'outputfilename'
-#        self.mash.yui_compile(self.files, output_filename)
-#        jar_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-#                                                    '..', 'yui_compressor-2.4.2.jar'))
-#        closure_command = ["java", "-jar", jar_path]
-#        closure_command += ['--js_output_file', output_filename]
-#        for js_file in self.files:
-#            closure_command += ["--js", js_file]
-#
-#        self.assertEqual(((closure_command, ), {}), call_mock.call_args)
+        settings.MASHER_COMPRESS = False
+
+        filename = Mock()
+
+        self.mash.cache_and_compile(self.files, filename)
+
+        self.assertEqual(((self.files, filename), {}), combine_uncompressed.call_args)
+        self.assertFalse(closure_compile.called)
+
+        if original_setting:
+            settings.MASHER_COMPRESS = original_setting
+        else:
+            del settings.MASHER_COMPRESS
+
+    @patch('masher.MashMedia.create_full_output_path')
+    @patch('__builtin__.open')
+    def test_creates_file(self, open_mock, create_fill_path):
+        filehandle = MagicMock()
+        open_mock.return_value = filehandle
+        filename = Mock()
+        self.mash.combine_uncompressed(self.files, filename)
+
+        self.assertEqual(((filename,), {}), create_fill_path.call_args)
+        self.assertEqual([
+                            ((create_fill_path.return_value, 'w'), {}),
+                            ((self.files[0], 'r'), {}),
+                            ((self.files[1], 'r'), {}),
+                            ((self.files[2], 'r'), {}),
+                         ], open_mock.call_args_list)
+        self.assertTrue(filehandle.__enter__.called)
+        self.assertTrue(filehandle.__exit__.called)
+
+    @patch('__builtin__.open')
+    def test_gets_file_contents(self, open_mock):
+        filename = "filename"
+        contents = self.mash.get_file_contents(filename)
+
+        self.assertEqual(((filename, 'r'), {}), open_mock.call_args)
+        self.assertEqual(open_mock.return_value.read.return_value, contents)
+
+    @patch('masher.MashMedia.get_file_contents')
+    @patch('__builtin__.open')
+    def test_appends_files(self, open_mock, get_contents):
+        filehandle = MagicMock()
+        file_object = Mock()
+        filehandle.__enter__.return_value = file_object
+        open_mock.return_value = filehandle
+        self.mash.combine_uncompressed([1], Mock())
+
+        self.assertTrue(file_object.write.called)
+        self.assertEqual(((get_contents.return_value,), {}), file_object.write.call_args)
