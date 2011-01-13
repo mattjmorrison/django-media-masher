@@ -13,4 +13,4 @@ coverage:
 	bin/coverage xml --source=src
 
 pylint:
-	bin/pylint
+	bin/pylint > pylint.txt
