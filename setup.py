@@ -14,5 +14,7 @@ setup(
         'django-debug-toolbar',
         'mock',
         'unittest-xml-reporting',
+        'coverage',
+        'pylint',
     ),
 )

@@ -1,4 +1,4 @@
-all: bootstrap buildout test coverage
+all: bootstrap buildout test coverage pylint
 
 bootstrap:
 	python bootstrap.py
@@ -11,3 +11,6 @@ test:
 
 coverage:
 	bin/coverage xml --source=src
+
+pylint:
+	bin/pylint
