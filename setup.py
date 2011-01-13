@@ -13,5 +13,6 @@ setup(
         'south',
         'django-debug-toolbar',
         'mock',
+        'unittest-xml-reporting',
     ),
 )
