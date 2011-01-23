@@ -52,9 +52,9 @@ class MashMedia(object):
         call(CLOSURE_BASE_COMMAND + args)
 
     def yui_compress(self, files, new_filename):
-        self.create_concat_file(files, new_filename)
         output_filename = self.create_full_output_path(new_filename)
-        args = ['--type', 'css', '-o', output_filename, new_filename]
+        self.create_concat_file(files, output_filename)
+        args = ['--type', 'css', '-o', output_filename, output_filename]
         call(YUI_BASE_COMMAND + args)
 
     def create_concat_file(self, files, new_filename):

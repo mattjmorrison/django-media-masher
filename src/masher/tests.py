@@ -45,12 +45,12 @@ class MashCssMediaTests(test.TestCase):
 
         new_filename = 'x'
         self.mash.yui_compress(self.files, new_filename)
-        self.assertEqual(((self.files, new_filename), {}), concat_files.call_args)
+        self.assertEqual(((self.files, create_full_path.return_value), {}), concat_files.call_args)
 
         compile_jar_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                             'compressors', 'yuicompressor-2.4.2.jar'))
         yui_command = ['java', '-jar', compile_jar_path, '--type',
-                           'css', '-o', create_full_path.return_value, new_filename]
+                           'css', '-o', create_full_path.return_value, create_full_path.return_value]
         self.assertEqual(((yui_command,), {}), call_mock.call_args)
         self.assertEqual(((new_filename,), {}), create_full_path.call_args)
 
