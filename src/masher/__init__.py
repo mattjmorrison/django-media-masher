@@ -23,29 +23,12 @@ class MashMedia(object):
     def mash(self, files):
         new_filename = self.create_output_filename(files)
 
-        if new_filename in self._mashed_files:
-            self.check_for_invalid_remash(files, self._mashed_files[new_filename])
-        else:
+        if new_filename not in self._mashed_files:
             self.cache_and_compile(files, new_filename)
 
         file_url = "%s%s" % (settings.MEDIA_URL, new_filename)
 
         return file_url
-
-
-    def check_for_invalid_remash(self, new_files, existing_files):
-        """
-        if ['a.js', 'b.js', 'c.js'] is mashed and ['c.js', 'b.js', 'a.js'] is
-        also mashed, there could be a javascript error if 'b.js' needs 'a.js'
-        to be loaded first in the browser. since only unique combinations of files
-        are mashed order is important to ensure that the files are combined in
-        the way that they need to load in the browser.
-        """
-        if new_files != existing_files:
-            raise ValueError("""
-                These files have already been mashed, but in a different order.
-                This could prove to result in an undesirable outcome.
-            """)
 
     def cache_and_compile(self, files, new_filename):
         self._mashed_files[new_filename] = files
@@ -95,7 +78,12 @@ class MashMedia(object):
         sorted_file_names = self.sort_names(files)
         file_name_string = self.join_names(sorted_file_names)
         filename_hash = self.hash_names(file_name_string)
-        return "%s.min.js" % filename_hash
+        return "%s.min.%s" % (filename_hash, self.get_extension(files))
+
+    def get_extension(self, files):
+        if self.are_all_css(files):
+            return 'css'
+        return 'js'
 
     def sort_names(self, files):
         return sorted(files)
@@ -105,6 +93,5 @@ class MashMedia(object):
 
     def hash_names(self, combined_file_names):
         return sha1(combined_file_names).hexdigest()
-
 
 site = MashMedia()

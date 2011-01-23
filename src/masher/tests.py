@@ -26,6 +26,18 @@ class MashCssMediaTests(test.TestCase):
         self.files = ('one.css', 'two.css', 'three.css')
         self.mash = masher.MashMedia()
 
+    @patch('masher.MashMedia.sort_names')
+    @patch('masher.MashMedia.join_names')
+    @patch('masher.MashMedia.hash_names')
+    def test_mash_sorts_joins_and_hashes_file_names(self, mock_hash, mock_join, mock_sort):
+        mock_hash.return_value = "somehash"
+        output_path = "%s.min.css" % mock_hash.return_value
+        result = self.mash.create_output_filename(self.files)
+        self.assertEqual(((self.files,), {}), mock_sort.call_args)
+        self.assertEqual(((mock_sort.return_value, ), {}), mock_join.call_args)
+        self.assertEqual(((mock_join.return_value, ), {}), mock_hash.call_args)
+        self.assertEqual(output_path, result)
+
     @patch('masher.MashMedia.create_full_output_path')
     @patch('masher.call')
     @patch('masher.MashMedia.create_concat_file')
@@ -154,11 +166,6 @@ class MashJavaScriptMediaTests(test.TestCase):
         self.assertEqual({self.mash.create_output_filename(self.files):self.files,
                           self.mash.create_output_filename(other_files):other_files},
                          self.mash._mashed_files)
-
-    @patch('masher.MashMedia.closure_compile', Mock())
-    def test_error_happens_when_same_files_are_in_different_order(self):
-        self.mash.mash(self.files)
-        self.assertRaises(ValueError, self.mash.mash, reversed(self.files))
 
     def test_output_dir_can_be_customized(self):
         original_setting = None
