@@ -6,6 +6,7 @@ Download the source and run
 
 How to use it...
 ===================
+Don't forget to add 'masher' to your INSTALLED_APPS
 
 Forms
 ::
@@ -33,6 +34,11 @@ Templates
 ::
     {% mash MEDIA_PATH_VAR 'file1.css' 'file2.css' %}
     {% mash MEDIA_PATH_VAR 'file1.js' 'file2.js' %}
+
+NOTE: Whenever you 'mash' media, remember that you need to give masher the filesystem
+path (not the MEDIA_URL) to your media and the optimized output of the mashed media will
+be placed in your STATIC_ROOT directory.
+
 
 Settings...
 ===================
