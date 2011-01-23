@@ -40,7 +40,7 @@ class MashMedia(object):
         if new_files != existing_files:
             raise ValueError("""
                 These files have already been mashed, but in a different order.
-                This could prove to result in undesirable results.
+                This could prove to result in an undesirable outcome.
             """)
 
     def cache_and_compile(self, files, new_filename):

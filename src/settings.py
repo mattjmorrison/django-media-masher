@@ -20,7 +20,7 @@ USE_I18N = False
 USE_L10N = True
 MEDIA_ROOT = path.join(PROJECT_DIR, 'media')
 STATIC_ROOT = MEDIA_ROOT
-MEDIA_URL = '/media/'
+MEDIA_URL = '/static/'
 SECRET_KEY = '-2cmgs7l$5grqwd!x&6241^ah&xx34ki48fwn#ef5s_lm(1@0a4w&v'
 
 TEMPLATE_LOADERS = (
@@ -44,7 +44,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
-MASHER_COMPRESS = True
+MASHER_COMPRESS = not DEBUG
 
 # Test settings
 SOUTH_TESTS_MIGRATE = False
