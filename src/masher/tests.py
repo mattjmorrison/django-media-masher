@@ -20,7 +20,80 @@ class MashTemplateTagTests(test.TestCase):
                          mash.call_args)
         self.assertEqual('src="%s"' % mash.return_value, result.strip())
 
-class MashMediaTests(test.TestCase):
+class MashCssMediaTests(test.TestCase):
+
+    def setUp(self):
+        self.files = ('one.css', 'two.css', 'three.css')
+        self.mash = masher.MashMedia()
+
+    @patch('masher.MashMedia.create_full_output_path')
+    @patch('masher.call')
+    @patch('masher.MashMedia.create_concat_file')
+    def test_passes_each_file_to_yui_compressor(self, concat_files, call_mock, create_full_path):
+
+        new_filename = 'x'
+        self.mash.yui_compress(self.files, new_filename)
+        self.assertEqual(((self.files, new_filename), {}), concat_files.call_args)
+
+        compile_jar_path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                            'compressors', 'yuicompressor-2.4.2.jar'))
+        yui_command = ['java', '-jar', compile_jar_path, '--type',
+                           'css', '-o', create_full_path.return_value, new_filename]
+        self.assertEqual(((yui_command,), {}), call_mock.call_args)
+        self.assertEqual(((new_filename,), {}), create_full_path.call_args)
+
+    @patch('shutil.copyfileobj')
+    @patch('__builtin__.open')
+    def test_concats_files_together(self, open_mock, copy_file_object):
+        filehandle = open_mock.return_value = MagicMock()
+        new_filename = 'x'
+        self.mash.create_concat_file(self.files, new_filename)
+
+        self.assertTrue(filehandle.__enter__.called)
+        self.assertTrue(filehandle.__exit__.called)
+
+        self.assertEqual([((new_filename, 'w'), {}),
+                          ((self.files[0], 'r'), {}),
+                          ((self.files[1], 'r'), {}),
+                          ((self.files[2], 'r'), {}),
+                          ], open_mock.call_args_list)
+
+        self.assertEqual([((open_mock.return_value, filehandle), {}),
+                          ((open_mock.return_value, filehandle), {}),
+                          ((open_mock.return_value, filehandle), {}),
+                          ],
+                         copy_file_object.call_args_list)
+
+    @patch('masher.MashMedia.are_all_css', Mock(return_value=True))
+    @patch('masher.MashMedia.combine_uncompressed')
+    @patch('masher.MashMedia.closure_compile')
+    @patch('masher.MashMedia.yui_compress')
+    def test_yui_compress_is_called_instead_of_closure_compile_when_css(self, yui_compress, closure_compile, combine_uncompressed):
+        original_setting = None
+        if hasattr(settings, 'MASHER_COMPRESS'):
+            original_setting = getattr(settings, 'MASHER_COMPRESS')
+
+        settings.MASHER_COMPRESS = True
+
+        new_filename = 'x'
+        self.mash.cache_and_compile(self.files, new_filename)
+        self.assertEqual(((self.files, new_filename), {}), yui_compress.call_args)
+        self.assertFalse(closure_compile.called)
+        self.assertFalse(combine_uncompressed.called)
+
+        if original_setting:
+            settings.STATIC_ROOT = original_setting
+
+    def test_returns_false_when_no_files_are_css(self):
+        self.assertFalse(self.mash.are_all_css(['first.js', 'second.js', 'third.js']))
+
+    def test_returns_false_when_not_all_files_are_css(self):
+        self.assertFalse(self.mash.are_all_css(['first.css', 'second.js', 'third.js']))
+
+    def test_returns_true_when_all_files_are_css(self):
+        self.assertTrue(self.mash.are_all_css(['first.css', 'second.css', 'third.css']))
+
+class MashJavaScriptMediaTests(test.TestCase):
 
     def setUp(self):
         self.files = ('one.js', 'two.js', 'three.js')

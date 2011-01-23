@@ -1,4 +1,5 @@
 import os
+import shutil
 from hashlib import sha1
 from subprocess import call
 from django.conf import settings
@@ -7,9 +8,12 @@ from django.template.loader import add_to_builtins
 add_to_builtins('masher.templatetags.masher_tags')
 
 APP_PATH = os.path.abspath(os.path.dirname(__file__))
-CLOSURE_JAR_PATH = os.path.join(APP_PATH, 'compressors', 'compiler.jar')
+COMPRESSOR_DIR = os.path.join(APP_PATH, 'compressors')
+CLOSURE_JAR_PATH = os.path.join(COMPRESSOR_DIR, 'compiler.jar')
+YUI_JAR_PATH = os.path.join(COMPRESSOR_DIR, 'yuicompressor-2.4.2.jar')
 
 CLOSURE_BASE_COMMAND = ["java", "-jar", CLOSURE_JAR_PATH]
+YUI_BASE_COMMAND = ["java", "-jar", YUI_JAR_PATH]
 
 class MashMedia(object):
 
@@ -46,9 +50,15 @@ class MashMedia(object):
     def cache_and_compile(self, files, new_filename):
         self._mashed_files[new_filename] = files
         if getattr(settings, 'MASHER_COMPRESS', True):
-            self.closure_compile(files, new_filename)
+            if self.are_all_css(files):
+                self.yui_compress(files, new_filename)
+            else:
+                self.closure_compile(files, new_filename)
         else:
             self.combine_uncompressed(files, new_filename)
+
+    def are_all_css(self, files):
+        return all(['.css' in file_name for file_name in files])
 
     def closure_compile(self, files, new_filename):
         args = ['--js_output_file', self.create_full_output_path(new_filename)]
@@ -58,14 +68,25 @@ class MashMedia(object):
 
         call(CLOSURE_BASE_COMMAND + args)
 
-    def get_file_contents(self, file):
-        return open(file, 'r').read()
+    def yui_compress(self, files, new_filename):
+        self.create_concat_file(files, new_filename)
+        output_filename = self.create_full_output_path(new_filename)
+        args = ['--type', 'css', '-o', output_filename, new_filename]
+        call(YUI_BASE_COMMAND + args)
+
+    def create_concat_file(self, files, new_filename):
+        with open(new_filename, 'w') as new_file:
+            for file_name in files:
+                shutil.copyfileobj(open(file_name, 'r'), new_file)
 
     def combine_uncompressed(self, files, filename):
         with open(self.create_full_output_path(filename), 'w') as combined_file:
             for file in files:
                 contents = self.get_file_contents(file)
                 combined_file.write(contents)
+
+    def get_file_contents(self, file):
+        return open(file, 'r').read()
 
     def create_full_output_path(self, filename):
         return os.path.join(settings.STATIC_ROOT, filename)

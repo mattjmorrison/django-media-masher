@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Sample Application</title>
+    <link href="{% mash MEDIA_ROOT "css/one.css" "css/two.css" "css/three.css" %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div>
@@ -8,6 +9,6 @@
     </div>
 
     {{ form.media.js }}
-    <script type="text/javascript" src="{% mash MEDIA_ROOT "one.js" "two.js" "three.js" %}"></script>
+    <script type="text/javascript" src="{% mash MEDIA_ROOT "js/one.js" "js/two.js" "js/three.js" %}"></script>
 </body>
 </html>

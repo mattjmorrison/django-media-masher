@@ -13,8 +13,10 @@ class MashNode(template.Node):
 
     def render(self, context):
         media_root_resolve = self.media_root.resolve(context)
+        print media_root_resolve
+        
         qualified_files = [path.join(media_root_resolve, name) for name in self.files]
-        return masher.MashMedia().mash(qualified_files)
+        return masher.site.mash(qualified_files)
 
 @register.tag
 def mash(parser, token):
