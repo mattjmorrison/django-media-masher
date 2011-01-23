@@ -1,6 +1,3 @@
-!!! This is still under development !!!
-!!! not all of these features have been implemented !!!
-
 Installing:
 ===================
 Download the source and run
@@ -17,9 +14,9 @@ Forms
     class MyForm(forms.Form):
         # ... fields ...
         class Media:
-            js = (site.mash(['path/to/media/file.js'],)
+            js = (site.mash(['path/to/media/file(s).js'],)
             css = {
-                'all': (site.mash(['path/to/media/file.css'],)
+                'all': (site.mash(['path/to/media/file(s).css'],)
             }
 
 Widgets
@@ -27,9 +24,9 @@ Widgets
     from masher import site
     class CalendarWidget(forms.TextInput):
         class Media:
-            js = (site.mash(['path/to/media/file.js'],)
+            js = (site.mash(['path/to/media/file(s).js'],)
             css = {
-                'all': (site.mash(['path/to/media/file.css'],)
+                'all': (site.mash(['path/to/media/file(s).css'],)
             }
 
 Templates
@@ -64,9 +61,6 @@ You don't want to obfuscate your source code by optimizing it.
 You don't want to worry about changing all of the URLS to your static media
 between development and production.
 
-You don't want to have to configure anything for your before/after optimized
-files.
-
 The Solution - Django Media Masher
 ===================
 
@@ -86,11 +80,32 @@ applications, but at the same time, it sucks... a lot (see Why Does it suck?).
 
 What Media Masher does is it allows you to keep your JavaScript and CSS source
 code logically separated into different directories, files, and written in a
-readable manner.  At server startup time, all related files
-(see What are Related Files?) are optimized into a single file and put in your
-STATIC_ROOT. Media Masher also generates a unique name for each unique
-combination of files and keeps track so it doesn't regenerate the same thing
-more than once.
+readable manner.  At server startup time, or during the first request (depending on
+how you set up Media Masher), all related files (see What are Related Files?) are
+optimized into a single file and put in your STATIC_ROOT. Media Masher also generates
+a unique name for each unique combination of files and keeps track so it doesn't
+regenerate the same thing more than once.
+
+If you want your media optimization to happen at server startup time do something along
+these lines in your Django app's __init__.py file.
+::
+    from masher import site
+    SCRIPT_ONE = site.mash(['%s/one.js' % JS_DIR,
+                           '%s/two.js' % JS_DIR,
+                           '%s/three.js' % JS_DIR])
+
+    STYLE_ONE = site.mash(['%s/one.css' % CSS_DIR,
+                           '%s/two.css' % CSS_DIR,
+                           '%s/three.css' % CSS_DIR])
+
+You can then use the SCRIPT_ONE and STYLE_ONE variables in your forms, widgets or views.
+
+If you want your media optimization to happen lazily (with the first request) then call
+site.mash(...) inside your forms, widgets or views.
+
+NOTE: You can call site.mash any number of times, if the file names you pass to it are the
+same you'll always get back the same exact file name, and the optimization process will
+only happen once.
 
 Why Does it suck?
 ===================
@@ -107,7 +122,7 @@ additional steps either, and I also don't want to have to maintain a copy of sou
 and optimized code, different file names or directories.
 
 Finally, I don't want to have any server side processing for my static CSS and JavaScript
-files, that shouldn't be necessary.
+files if I don't have to, that shouldn't be necessary.
 
 What are Related Files?
 ===================
