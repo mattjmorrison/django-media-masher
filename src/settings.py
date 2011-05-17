@@ -53,6 +53,7 @@ NOSE_ARGS = (
     '--with-coverage',
     '--with-xunit',
     '--with-xcover',
+    '--cover-package=src'
 )
 
 #TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
