@@ -18,5 +18,6 @@ setup(
         'pylint',
         'nose',
         'django-nose',
+        'nosexcover',
     ),
 )

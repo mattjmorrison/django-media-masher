@@ -52,10 +52,10 @@ SOUTH_TESTS_MIGRATE = False
 NOSE_ARGS = (
     '--with-coverage',
     '--with-xunit',
+    '--with-xcover',
 )
 
 #TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 TEST_OUTPUT_VERBOSE = False
 TEST_OUTPUT_DESCRIPTIONS = False
-TEST_OUTPUT_DIR = 'xmlrunner'
