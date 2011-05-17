@@ -12,6 +12,8 @@
     <div class="another">Another</div>
 
     {{ form.media.js }}
-    <script type="text/javascript" src="{% mash MEDIA_ROOT "js/one.js" "js/two.js" "js/three.js" %}"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}media.out.min.js.gz"></script>
+    <script type="text/javascript" src="{% mash MEDIA_ROOT "js/two.js" "js/three.js" %}"></script>
+
 </body>
 </html>

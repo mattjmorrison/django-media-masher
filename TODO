@@ -1,3 +1,13 @@
 1. support for gzip
+    a. not sure how to go about doing this yet...(for all browser
+            support)
 
 2. make optimizations always lazy when debug is True (manage.py is slow when not lazy)
+    a. change __init__ to instead of calling site.mash call
+        some method instead... like pre_mash
+        - also maybe make site a keyword argument defaulted to
+          global site
+        - pre_mash needs to do exactly what calling site.mash does, unless DEBUG=True
+            - when DEBUG is True it needs to not do anything
+                    - if pre_mash returns something, it needs to be some kind of
+                      proxy that will be evaluated at request time but not before

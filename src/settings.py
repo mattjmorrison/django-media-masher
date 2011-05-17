@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'masher',
     'sample_app',
+    'django_nose',
 )
 
 DEBUG_TOOLBAR_CONFIG = {
@@ -48,7 +49,13 @@ MASHER_COMPRESS = True
 
 # Test settings
 SOUTH_TESTS_MIGRATE = False
-TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.run_tests'
+NOSE_ARGS = (
+    '--with-coverage',
+    '--with-xunit',
+)
+
+#TEST_RUNNER = 'xmlrunner.extra.djangotestrunner.XMLTestRunner'
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 TEST_OUTPUT_VERBOSE = False
 TEST_OUTPUT_DESCRIPTIONS = False
 TEST_OUTPUT_DIR = 'xmlrunner'

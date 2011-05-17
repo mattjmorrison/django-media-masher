@@ -16,5 +16,7 @@ setup(
         'unittest-xml-reporting',
         'coverage',
         'pylint',
+        'nose',
+        'django-nose',
     ),
 )
